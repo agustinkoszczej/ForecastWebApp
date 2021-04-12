@@ -1,0 +1,72 @@
+﻿@model ForecastWebApp.ViewModels.DashboardViewModel
+
+@{ ViewData["Title"] = "Dashboard"; }
+
+<div class="container">
+
+    <div class="container">
+        <form method="post">
+
+            <div class="container">
+                <div class="form-group col-md-offset-3 col-md-5">
+                    <h2>Seleccioná la zona</h2>
+                    <label asp-for="Search.Country" style="font-family: Arial"></label>
+                    <input asp-for="Search.Country" class="form-control" />
+                    <span asp-validation-for="Search.Country" class="text-danger"></span>
+                    <label asp-for="Search.City" style="font-family: Arial"></label>
+                    <input asp-for="Search.City" class="form-control" />
+                    <span asp-validation-for="Search.City" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="container">
+                <div class="form-group col-md-offset-3 col-md-5">
+                    <button asp-controller="ForecastWebApp" asp-action="Dashboard" class="btn btn-primary">Buscar</button>
+                </div>
+            </div>
+        </form>
+
+        <div class="form-group col-md-offset-3 col-md-5">
+
+            <h2>Reporte del clima</h2>
+            @{
+                var culture = System.Globalization.CultureInfo.CurrentCulture;
+                var i = 0; }
+            <label><b>@culture.DateTimeFormat.GetDayName(DateTime.Now.AddDays(i).DayOfWeek)</b></label>
+            <br />
+
+            <label>País</label>
+            <span class="badge">@Model.Weather.City.Country</span>
+            <br />
+
+            <label>Ciudad</label>
+            <span class="badge">@Model.Weather.City.Name</span>
+            <br />
+
+            <label>Temperatura</label>
+            <span class="badge">@Model.Weather.List.FirstOrDefault().Main.Temp °C</span>
+            <br />
+
+            <label>Humedad</label>
+            <span class="badge">@Model.Weather.List.FirstOrDefault().Main.Humidity %</span>
+            <br />
+
+            <label>Viento</label>
+            <span class="badge">@Model.Weather.List.FirstOrDefault().Wind.Speed Km/h</span>
+            <br />
+        </div>
+
+        <div class="form-group col-md-offset-3 col-md-5">
+
+            <h2>Pronóstico</h2>
+            @foreach (var weatherItem in Model.Weather.List.Skip(1))
+            {
+                i++;
+<label><b>@culture.DateTimeFormat.GetDayName(DateTime.Now.AddDays(i).DayOfWeek)</b></label>
+                <img src="http://openweathermap.org/img/w/@(weatherItem.Weather.FirstOrDefault().Icon).png">
+                                                <span class="badge">@weatherItem.Main.Temp °C</span>
+                                                                <br />}
+
+        </div>
+
+    </div>
+</div>
